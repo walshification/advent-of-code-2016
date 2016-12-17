@@ -3,6 +3,7 @@ class Gps
     @bearing = bearing
     @x = 0
     @y = 0
+    @history = [[0, 0]]
   end
 
   def bearing
@@ -16,8 +17,14 @@ class Gps
   def advance(command='A1')
     steps = command.split(', ')
     steps.each do |step|
-      orient(step[0])
-      move(step.slice(1, (step.length - 1)).to_i)
+      orientation, speed = parse(step)
+
+      orient(orientation)
+      speed.times do
+        move(1)
+        return if visited?
+        record_spot
+      end
     end
   end
 
@@ -26,6 +33,10 @@ class Gps
   end
 
   private
+
+  def parse(step)
+    return step[0], step.slice(1, (step.length - 1)).to_i
+  end
 
   def orient(orientation)
     if orientation == 'L'
@@ -53,5 +64,13 @@ class Gps
     else
       @x -= speed
     end
+  end
+
+  def visited?
+    @history.include?(coordinates)
+  end
+
+  def record_spot
+    @history << coordinates
   end
 end

@@ -93,10 +93,17 @@ class GpsTest < Minitest::Test
     assert_equal([-188, 0], gps.coordinates)
   end
 
+  def test_stops_if_it_reaches_a_point_already_visited
+    gps = Gps.new
+    gps.advance('R8, R4, R4, R8')
+
+    assert_equal(4, gps.blocks_away)
+  end
+
   def test_solves_the_puzzle
     gps = Gps.new
     gps.advance(ADVENT_INPUT)
 
-    assert_equal(279, gps.blocks_away)
+    assert_equal(163, gps.blocks_away)
   end
 end
