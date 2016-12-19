@@ -1920,37 +1920,57 @@ ADVENT_INPUT = [
 
 class TriangleValidatorTest < Minitest::Test
   def test_can_make_triangles_from_input
-    validator = TriangleValidator.new([[2, 2, 3]])
+    triangles = TriangleFactory.for(:standard, [[2, 2, 3]])
+    validator = TriangleValidator.new(triangles)
     assert_equal(1, validator.triangles.count)
     assert_equal(Triangle, validator.triangles.first.class)
   end
 
   def test_makes_more_than_one_triangle_at_once
-    validator = TriangleValidator.new([[2, 2, 3], [3, 4, 5]])
+    triangles = TriangleFactory.for(:standard, [[2, 2, 3], [3, 4, 5]])
+    validator = TriangleValidator.new(triangles)
     assert_equal(2, validator.triangles.count)
   end
 
   def test_triangles_remember_their_own_dimensions
-    validator = TriangleValidator.new([[3, 4, 5]])
+    triangles = TriangleFactory.for(:standard, [[3, 4, 5]])
+    validator = TriangleValidator.new(triangles)
     assert_equal(3, validator.triangles.first.side_one)
     assert_equal(4, validator.triangles.first.side_two)
     assert_equal(5, validator.triangles.first.side_three)
   end
 
   def test_returns_valid_triangle
-    validator = TriangleValidator.new([[3, 4, 5]])
+    triangles = TriangleFactory.for(:standard, [[3, 4, 5]])
+    validator = TriangleValidator.new(triangles)
     valid_triangles = validator.validate
     assert_equal(1, valid_triangles.count)
   end
 
   def test_rejects_invalid_triangle
-    validator = TriangleValidator.new([[5, 10, 25]])
+    triangles = TriangleFactory.for(:standard, [[5, 10, 25]])
+    validator = TriangleValidator.new(triangles)
     valid_triangles = validator.validate
     assert_equal(0, valid_triangles.count)
   end
 
+  def test_transposes_triangle_dimensions
+    triangles = TriangleFactory.for(:transposed, [
+      [541, 588, 421],
+      [827, 272, 126],
+      [660, 514, 367],
+    ])
+    validator = TriangleValidator.new(triangles)
+    assert_equal(541, validator.triangles.first.side_one)
+    assert_equal(827, validator.triangles.first.side_two)
+    assert_equal(660, validator.triangles.first.side_three)
+  end
+
   def test_solves_the_puzzle
-    validator = TriangleValidator.new(ADVENT_INPUT)
-    assert_equal(993, validator.validate.count)
+    triangles = TriangleFactory.for(:transposed, ADVENT_INPUT)
+    validator = TriangleValidator.new(triangles)
+    valid_triangles = validator.validate
+
+    assert_equal(1849, valid_triangles.count)
   end
 end
