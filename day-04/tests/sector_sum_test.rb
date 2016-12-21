@@ -1,9 +1,7 @@
-#!/usr/bin/env ruby
-gem 'minitest', '>= 5.0.0'
-require 'minitest/autorun'
-
+require './minitest_helper'
 require 'yaml'
-require_relative 'sector_sum'
+require './day-04/sector_sum'
+require './day-04/code'
 
 ADVENT_INPUT = YAML.load_file('day-04/advent_input.yaml')
 
@@ -35,32 +33,5 @@ class SectorSumTests < Minitest::Test
     advent_codes = ADVENT_INPUT.map { |code| Code.new(code) }
     sector_sum = SectorSum.new(advent_codes)
     assert_equal(185371, sector_sum.sum_codes)
-  end
-end
-
-class CodeTests < Minitest::Test
-  def test_parses_the_code_for_its_encrypted_name
-    code = Code.new('test-code-123[besty]')
-    assert_equal('testcode', code.encrypted_name)
-  end
-
-  def test_parses_the_code_for_its_sector_id
-    code = Code.new('test-code-123[besty]')
-    assert_equal(123, code.sector_id)
-  end
-
-  def test_parses_the_code_for_its_sector_id
-    code = Code.new('test-code-123[besty]')
-    assert_equal('besty', code.checksum)
-  end
-
-  def test_knows_code_is_not_real_with_invalid_checksum
-    code = Code.new('test-code-123[besty]')
-    assert_equal(false, code.real?)
-  end
-
-  def test_knows_code_is_real_with_valid_checksum
-    code = Code.new('test-code-123[etcdo]')
-    assert_equal(true, code.real?)
   end
 end
