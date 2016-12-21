@@ -1,0 +1,14 @@
+example_id                       | status | run_time        |
+-------------------------------- | ------ | --------------- |
+./spec/day-01/gps_spec.rb[1:1:1] | passed | 0.00055 seconds |
+./spec/day-01/gps_spec.rb[1:2:1] | passed | 0.00008 seconds |
+./spec/day-01/gps_spec.rb[1:2:2] | passed | 0.0001 seconds  |
+./spec/day-01/gps_spec.rb[1:2:3] | passed | 0.00007 seconds |
+./spec/day-01/gps_spec.rb[1:2:4] | passed | 0.00008 seconds |
+./spec/day-01/gps_spec.rb[1:2:5] | passed | 0.00008 seconds |
+./spec/day-01/gps_spec.rb[1:2:6] | passed | 0.00382 seconds |
+./spec/day-01/gps_spec.rb[1:2:7] | passed | 0.00014 seconds |
+./spec/day-01/gps_spec.rb[1:3:1] | passed | 0.00009 seconds |
+./spec/day-01/gps_spec.rb[1:3:2] | passed | 0.00012 seconds |
+./spec/day-01/gps_spec.rb[1:3:3] | passed | 0.00017 seconds |
+./spec/day-01/gps_spec.rb[1:4:1] | passed | 0.03951 seconds |

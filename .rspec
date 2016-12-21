@@ -1,0 +1,3 @@
+$LOAD_PATH << './lib'
+--color
+--require spec_helper
