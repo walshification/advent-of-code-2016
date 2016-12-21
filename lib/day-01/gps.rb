@@ -1,13 +1,9 @@
 class Gps
-  def initialize(bearing=0)
-    @bearing = bearing
+  def initialize
+    @bearing = 0
     @x = 0
     @y = 0
     @history = [[0, 0]]
-  end
-
-  def bearing
-    @bearing
   end
 
   def coordinates
@@ -21,7 +17,7 @@ class Gps
 
       orient(orientation)
       speed.times do
-        move(1)
+        move
         return if visited?
         record_spot
       end
@@ -35,7 +31,7 @@ class Gps
   private
 
   def parse(step)
-    return step[0], step.slice(1, (step.length - 1)).to_i
+    return step[0].upcase, step.slice(1, (step.length - 1)).to_i
   end
 
   def orient(orientation)
@@ -54,15 +50,15 @@ class Gps
     @bearing = (@bearing + 1) % 4
   end
 
-  def move(speed)
+  def move
     if @bearing == 0
-      @y += speed
+      @y += 1
     elsif @bearing == 1
-      @x += speed
+      @x += 1
     elsif @bearing == 2
-      @y -= speed
+      @y -= 1
     else
-      @x -= speed
+      @x -= 1
     end
   end
 
