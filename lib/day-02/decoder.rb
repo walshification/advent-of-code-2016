@@ -5,7 +5,7 @@ class Decoder
     ['7', '8', '9'],
   ]
 
-  def initialize(keypad=KEYPAD, position=nil)
+  def initialize(keypad=KEYPAD, position: nil)
     @position = position || [1, 1]
     @keypad = keypad
   end
