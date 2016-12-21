@@ -3,15 +3,16 @@ class SectorSum
 
   def initialize(codes)
     @codes = codes
+    @total = nil
   end
 
   def sum_codes
-    total = 0
-    @codes.each do |code|
-      if code.real?
-        total += code.sector_id
-      end
-    end
-    total
+    @total ||= real_codes.inject(0) { |total, code| total += code.sector_id }
+  end
+
+  private
+
+  def real_codes
+    @codes.select { |code| code.real? }
   end
 end
