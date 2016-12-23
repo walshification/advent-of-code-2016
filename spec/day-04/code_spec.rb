@@ -4,7 +4,7 @@ RSpec.describe Code do
   describe '#encripted_name' do
     it 'parses a code string for the encrypted name' do
       code = Code.new('test-code-123[besty]')
-      expect(code.encrypted_name).to eql('test code')
+      expect(code.encrypted_name).to eql('test-code')
     end
   end
 

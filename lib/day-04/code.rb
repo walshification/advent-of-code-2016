@@ -27,7 +27,7 @@ class Code
 
   def parse_name
     code_parts = @code.split('-')
-    @encrypted_name = code_parts[0, code_parts.length - 1].join(' ')
+    @encrypted_name = code_parts[0, code_parts.length - 1].join('-')
   end
 
   def parse_sector_id
@@ -43,7 +43,9 @@ class Code
   end
 
   def five_most_common_letters
-    @five_most_common_letters ||= sort_by_value(encrypted_name.gsub(/\s+/, "").chars)
+    @five_most_common_letters ||= sort_by_value(encrypted_name.gsub(/-+/, ' ')
+                                                              .gsub(/\s+/, '')
+                                                              .chars)
   end
 
   def sort_by_value(char_string)
