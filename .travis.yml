@@ -1,0 +1,12 @@
+language: ruby
+sudo: false
+
+branches:
+  only:
+    - master
+
+install:
+  - bundle install
+
+script:
+  - bundle exec rspec
