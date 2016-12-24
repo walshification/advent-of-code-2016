@@ -5,6 +5,10 @@ branches:
   only:
     - master
 
+addons:
+    code_climate:
+        repo_token: ENV['CODECLIMATE_REPO_TOKEN']
+
 install:
   - bundle install
 
