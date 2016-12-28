@@ -24,7 +24,7 @@ class Ip
 
   def hypernet_abbas
     @hypernet_abbas ||= hypernet_sequence.map do |seq|
-      parse_groups(4, seq).map { |group| abba? (group) }
+      parse_groups(4, seq).map { |group| abba?(group) }
     end.flatten
   end
 
