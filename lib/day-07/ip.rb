@@ -24,13 +24,13 @@ class Ip
 
   def hypernet_abbas
     @hypernet_abbas ||= hypernet_sequence.map do |seq|
-      parse_groups(4, seq).map { |group| abba_parse(group) }
+      parse_groups(4, seq).map { |group| abba? (group) }
     end.flatten
   end
 
   def silus_abbas
     @silus_abbas = silus.map do |sequence|
-      parse_groups(4, sequence).map { |group| abba_parse(group) }
+      parse_groups(4, sequence).map { |group| abba?(group) }
     end.flatten
   end
 
@@ -64,15 +64,56 @@ class Ip
     abba_groups
   end
 
-  def abba_parse(clump)
-    clump[0] == clump[3] && clump[1] == clump[2] && clump[0] != clump[1]
+  def abba?(sequence)
+    template = {
+      matching_pairs: [
+        [sequence[0], sequence[3]],
+        [sequence[1], sequence[2]],
+      ],
+      different_pairs: [
+        [sequence[0], sequence[1]],
+      ]
+    }
+    valid_sequence?(template)
   end
 
   def aba?(sequence)
-    sequence[0] == sequence[2] && sequence[0] != sequence[1]
+    template = {
+      matching_pairs: [
+        [sequence[0], sequence[2]]
+      ],
+      different_pairs: [
+        [sequence[0], sequence[1]]
+      ],
+    }
+    valid_sequence?(template)
   end
 
-  def compliment?(aba, bab)
-    bab[0] == bab[2] && aba[0] == bab[1] && aba[1] == bab[0]
+  def valid_sequence?(template)
+    template.keys.map do |group|
+      if group == :matching_pairs
+        template[group].map do |pairs|
+          _match?(*pairs)
+        end
+      elsif group == :different_pairs
+        template[group].map do |pairs|
+          different?(*pairs)
+        end
+      end
+    end.flatten.all?
+  end
+
+  def compliment?(sequence_1, sequence_2)
+    (_match?(sequence_2[0], sequence_2[2]) &&
+     _match?(sequence_1[0], sequence_2[1]) &&
+     _match?(sequence_1[1], sequence_2[0]))
+  end
+
+  def _match?(char_1, char_2)
+    char_1 == char_2
+  end
+
+  def different?(char_1, char_2)
+    char_1 != char_2
   end
 end
