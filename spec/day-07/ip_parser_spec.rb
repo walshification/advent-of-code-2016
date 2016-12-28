@@ -16,11 +16,13 @@ RSpec.describe Ip do
   end
 
   describe '#parse_ssl' do
-    it 'solves for ssh' do
-      advent_input = YAML.load_file('spec/fixtures/ips.yaml')
-      advent_ips = advent_input.map { |input| Ip.new(input) }
-      ip_parser = IpParser.new(advent_ips)
-      expect(ip_parser.parse_ssl.count).to eql(258)
+    context 'with Advent Code input' do
+      it 'solves for ssh' do
+        advent_input = YAML.load_file('spec/fixtures/ips.yaml')
+        advent_ips = advent_input.map { |input| Ip.new(input) }
+        ip_parser = IpParser.new(advent_ips)
+        expect(ip_parser.parse_ssl.count).to eql(258)
+      end
     end
   end
 end

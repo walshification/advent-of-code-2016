@@ -10,8 +10,4 @@ class IpParser
   def parse_ssl
     @ssh_supporters = @ip_addresses.select { |ip| ip.supports_ssl? }
   end
-
-  def supports_all_security?
-    parse_tls & parse_ssh
-  end
 end
