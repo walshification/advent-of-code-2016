@@ -1,4 +1,3 @@
 .bundle
-coverage
 spec/examples.txt
 tmp
