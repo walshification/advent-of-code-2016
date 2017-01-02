@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'yaml'
 
 require 'day-08/keycard_screen'
 
@@ -29,7 +29,17 @@ RSpec.describe KeycardScreen do
                         "###....\n"\
                         ".......\n"
 
-      expect(screen.scan_keycard('rect 3x2')).to eql(expected_screen)
+      screen.scan_keycard('rect 3x2')
+      expect(screen.window).to eql(expected_screen)
+    end
+
+    it 'turns a single pixel' do
+      expected_screen = "#......\n"\
+                        ".......\n"\
+                        ".......\n"
+
+      screen.scan_keycard('rect 1x1')
+      expect(screen.window).to eql(expected_screen)
     end
 
     it 'rotates a specified column by a specified amount' do
@@ -42,6 +52,16 @@ RSpec.describe KeycardScreen do
       expect(screen.window).to eql(expected_screen)
     end
 
+    it 'can rotate a column by more than 1' do
+      expected_screen = ".......\n"\
+                        ".......\n"\
+                        "#......\n"
+
+      screen.scan_keycard('rect 1x1')
+      screen.scan_keycard('rotate column x=0 by 2')
+      expect(screen.window).to eql(expected_screen)
+    end
+
     it 'rotates a specified row by a specified amount' do
       expected_screen = "....#.#\n"\
                         "###....\n"\
@@ -51,6 +71,53 @@ RSpec.describe KeycardScreen do
       screen.scan_keycard('rotate column x=1 by 1')
       screen.scan_keycard('rotate row y=0 by 4')
       expect(screen.window).to eql(expected_screen)
+    end
+
+    it 'wraps pixels around when they go past the end of the screen' do
+      expected_screen = ".#..#.#\n"\
+                        "#.#....\n"\
+                        ".#.....\n"
+
+      screen.scan_keycard('rect 3x2')
+      screen.scan_keycard('rotate column x=1 by 1')
+      screen.scan_keycard('rotate row y=0 by 4')
+      screen.scan_keycard('rotate column x=1 by 1')
+      expect(screen.window).to eql(expected_screen)
+    end
+
+    it 'wraps pixels around rows' do
+      expected_screen = "#....#.\n"\
+                        "###....\n"\
+                        ".#.....\n"
+
+      screen.scan_keycard('rect 3x2')
+      screen.scan_keycard('rotate column x=1 by 1')
+      screen.scan_keycard('rotate row y=0 by 5')
+      expect(screen.window).to eql(expected_screen)
+    end
+
+    it 'accepts more than one command at a time' do
+      expected_screen = ".#..#.#\n"\
+                        "#.#....\n"\
+                        ".#.....\n"
+      commands = [
+        'rect 3x2',
+        'rotate column x=1 by 1',
+        'rotate row y=0 by 4',
+        'rotate column x=1 by 1',
+      ]
+
+      screen.scan_keycard(commands)
+      expect(screen.window).to eql(expected_screen)
+    end
+  end
+
+  context 'with Advent Code input' do
+    it 'solves the puzzle' do
+      advent_commands = YAML.load_file('./spec/fixtures/keycard_input.yaml')
+      advent_screen = described_class.new
+      advent_screen.scan_keycard(advent_commands)
+      expect(advent_screen.window.count('#')).to eql(110)
     end
   end
 end
