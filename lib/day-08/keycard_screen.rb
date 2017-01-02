@@ -26,7 +26,7 @@ class KeycardScreen
       end
     end
     if command_parts.first == 'rotate'
-      keyword, axis, column, _, limit = command_parts
+      _, _, column, _, limit = command_parts
       dimension, value = column.split('=')
       if dimension == 'x'
         y = 0
@@ -37,6 +37,22 @@ class KeycardScreen
           @screen[y][value.to_i] = new_value
           new_value = current_value
           y += 1
+        end
+      end
+      if dimension == 'y'
+        y = value.to_i
+        x = 0
+        new_value = nil
+        while x < limit.to_i
+          x_index = 0
+          while x_index < @screen_width
+            new_value ||= @screen[y][(x_index + 1) % @screen_width]
+            current_value = @screen[y][x_index]
+            @screen[y][x_index] = new_value
+            new_value = current_value
+            x_index += 1
+          end
+          x += 1
         end
       end
     end

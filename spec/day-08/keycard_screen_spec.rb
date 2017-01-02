@@ -41,5 +41,16 @@ RSpec.describe KeycardScreen do
       screen.scan_keycard('rotate column x=1 by 1')
       expect(screen.window).to eql(expected_screen)
     end
+
+    it 'rotates a specified row by a specified amount' do
+      expected_screen = "....#.#\n"\
+                        "###....\n"\
+                        ".#.....\n"
+
+      screen.scan_keycard('rect 3x2')
+      screen.scan_keycard('rotate column x=1 by 1')
+      screen.scan_keycard('rotate row y=0 by 4')
+      expect(screen.window).to eql(expected_screen)
+    end
   end
 end
