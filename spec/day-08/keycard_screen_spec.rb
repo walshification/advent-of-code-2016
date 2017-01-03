@@ -24,91 +24,93 @@ RSpec.describe KeycardScreen do
         ['.', '.', '.', '.', '.', '.', '.'],
       ]) }
 
-    it 'turns pixels on when given a rect AxB command' do
-      expected_screen = "###....\n"\
-                        "###....\n"\
-                        ".......\n"
+    context '1 pixel' do
+      it 'turns a single pixel' do
+        expected_screen = "#......\n"\
+                          ".......\n"\
+                          ".......\n"
 
-      screen.scan_keycard('rect 3x2')
-      expect(screen.window).to eql(expected_screen)
+        screen.scan_keycard(['rect 1x1'])
+        expect(screen.window).to eql(expected_screen)
+      end
+
+      it 'can rotate a column by more than 1' do
+        expected_screen = ".......\n"\
+                          ".......\n"\
+                          "#......\n"
+
+        screen.scan_keycard(['rect 1x1'])
+        screen.scan_keycard(['rotate column x=0 by 2'])
+        expect(screen.window).to eql(expected_screen)
+      end
     end
 
-    it 'turns a single pixel' do
-      expected_screen = "#......\n"\
-                        ".......\n"\
-                        ".......\n"
+    context 'with a block of pixels' do
+      before(:each) do
+        screen.scan_keycard(['rect 3x2'])
+      end
 
-      screen.scan_keycard('rect 1x1')
-      expect(screen.window).to eql(expected_screen)
-    end
+      it 'turns pixels on when given a rect AxB command' do
+        expected_screen = "###....\n"\
+                          "###....\n"\
+                          ".......\n"
 
-    it 'rotates a specified column by a specified amount' do
-      expected_screen = "#.#....\n"\
-                        "###....\n"\
-                        ".#.....\n"
+        expect(screen.window).to eql(expected_screen)
+      end
 
-      screen.scan_keycard('rect 3x2')
-      screen.scan_keycard('rotate column x=1 by 1')
-      expect(screen.window).to eql(expected_screen)
-    end
+      it 'rotates a specified column by a specified amount' do
+        expected_screen = "#.#....\n"\
+                          "###....\n"\
+                          ".#.....\n"
 
-    it 'can rotate a column by more than 1' do
-      expected_screen = ".......\n"\
-                        ".......\n"\
-                        "#......\n"
+        screen.scan_keycard(['rotate column x=1 by 1'])
+        expect(screen.window).to eql(expected_screen)
+      end
 
-      screen.scan_keycard('rect 1x1')
-      screen.scan_keycard('rotate column x=0 by 2')
-      expect(screen.window).to eql(expected_screen)
-    end
+      it 'rotates a specified row by a specified amount' do
+        expected_screen = "....#.#\n"\
+                          "###....\n"\
+                          ".#.....\n"
 
-    it 'rotates a specified row by a specified amount' do
-      expected_screen = "....#.#\n"\
-                        "###....\n"\
-                        ".#.....\n"
+        screen.scan_keycard(['rotate column x=1 by 1'])
+        screen.scan_keycard(['rotate row y=0 by 4'])
+        expect(screen.window).to eql(expected_screen)
+      end
 
-      screen.scan_keycard('rect 3x2')
-      screen.scan_keycard('rotate column x=1 by 1')
-      screen.scan_keycard('rotate row y=0 by 4')
-      expect(screen.window).to eql(expected_screen)
-    end
+      it 'wraps pixels around when they go past the end of the screen' do
+        expected_screen = ".#..#.#\n"\
+                          "#.#....\n"\
+                          ".#.....\n"
 
-    it 'wraps pixels around when they go past the end of the screen' do
-      expected_screen = ".#..#.#\n"\
-                        "#.#....\n"\
-                        ".#.....\n"
+        screen.scan_keycard(['rotate column x=1 by 1'])
+        screen.scan_keycard(['rotate row y=0 by 4'])
+        screen.scan_keycard(['rotate column x=1 by 1'])
+        expect(screen.window).to eql(expected_screen)
+      end
 
-      screen.scan_keycard('rect 3x2')
-      screen.scan_keycard('rotate column x=1 by 1')
-      screen.scan_keycard('rotate row y=0 by 4')
-      screen.scan_keycard('rotate column x=1 by 1')
-      expect(screen.window).to eql(expected_screen)
-    end
+      it 'wraps pixels around rows' do
+        expected_screen = "#....#.\n"\
+                          "###....\n"\
+                          ".#.....\n"
 
-    it 'wraps pixels around rows' do
-      expected_screen = "#....#.\n"\
-                        "###....\n"\
-                        ".#.....\n"
+        screen.scan_keycard(['rotate column x=1 by 1'])
+        screen.scan_keycard(['rotate row y=0 by 5'])
+        expect(screen.window).to eql(expected_screen)
+      end
 
-      screen.scan_keycard('rect 3x2')
-      screen.scan_keycard('rotate column x=1 by 1')
-      screen.scan_keycard('rotate row y=0 by 5')
-      expect(screen.window).to eql(expected_screen)
-    end
+      it 'accepts more than one command at a time' do
+        expected_screen = ".#..#.#\n"\
+                          "#.#....\n"\
+                          ".#.....\n"
+        commands = [
+          'rotate column x=1 by 1',
+          'rotate row y=0 by 4',
+          'rotate column x=1 by 1',
+        ]
 
-    it 'accepts more than one command at a time' do
-      expected_screen = ".#..#.#\n"\
-                        "#.#....\n"\
-                        ".#.....\n"
-      commands = [
-        'rect 3x2',
-        'rotate column x=1 by 1',
-        'rotate row y=0 by 4',
-        'rotate column x=1 by 1',
-      ]
-
-      screen.scan_keycard(commands)
-      expect(screen.window).to eql(expected_screen)
+        screen.scan_keycard(commands)
+        expect(screen.window).to eql(expected_screen)
+      end
     end
   end
 
