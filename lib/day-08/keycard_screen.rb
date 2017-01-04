@@ -58,7 +58,7 @@ class KeycardScreen
   end
 
   def rotate(command_body)
-    line, dimension, _, limit = command_body
+    _, dimension, _, limit = command_body
     axis, degree = dimension.split('=')
 
     if axis == 'x'
