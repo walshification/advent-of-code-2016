@@ -6,8 +6,8 @@ branches:
     - master
 
 addons:
-    code_climate:
-        repo_token: ENV['CODECLIMATE_REPO_TOKEN']
+  code_climate:
+    repo_token: 993c591cad267ef69e64e6147baee06483d935dd4741948c2ad85d09b20695bd
 
 install:
   - bundle install
