@@ -1,3 +1,4 @@
+require 'yaml'
 require 'day-09/decompressor'
 
 RSpec.describe Decompressor do
@@ -11,12 +12,37 @@ RSpec.describe Decompressor do
       decompressor = described_class.new('A(1x5)BC')
       expect(decompressor.decompressed_text).to eql('ABBBBBC')
     end
+
+    it 'copies text longer than a character' do
+      decompressor = described_class.new('(3x3)XYZ')
+      expect(decompressor.decompressed_text).to eql('XYZXYZXYZ')
+    end
+
+    it 'expands text if it finds more than one marker' do
+      decompressor = described_class.new('A(2x2)BCD(2x2)EFG')
+      expect(decompressor.decompressed_text).to eql('ABCBCDEFEFG')
+    end
+
+    it 'skips over strings that look like markers if they are already marked' do
+      decompressor = described_class.new('(6x1)(1x3)A')
+      expect(decompressor.decompressed_text).to eql('(1x3)A')
+    end
+
+    it 'survives complicated ones' do
+      decompressor = described_class.new('X(8x2)(3x3)ABCY')
+      expect(decompressor.decompressed_text).to eql('X(3x3)ABC(3x3)ABCY')
+    end
   end
 
   describe '#decompressed_length' do
     it 'returns the length of the decompressed text' do
       decompressor = described_class.new('ADVENT')
       expect(decompressor.decompressed_length).to eql(6)
+    end
+
+    it 'returns the length of an expanded text that is decompressed' do
+      decompressor = described_class.new('X(8x2)(3x3)ABCY')
+      expect(decompressor.decompressed_length).to eql(18)
     end
   end
 end
