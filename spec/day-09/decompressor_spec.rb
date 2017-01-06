@@ -44,5 +44,18 @@ RSpec.describe Decompressor do
       decompressor = described_class.new('X(8x2)(3x3)ABCY')
       expect(decompressor.decompressed_length).to eql(18)
     end
+
+    it 'accurately processes lengths longer than 9' do
+      decompressor = described_class.new('(1x10)X')
+      expect(decompressor.decompressed_length).to eql(10)
+    end
+  end
+
+  context 'with Advent Code input' do
+    it 'solves the puzzle' do
+      compressed_text = File.read('./spec/fixtures/decompressor_input.txt')
+      decompressor = described_class.new(compressed_text)
+      expect(decompressor.decompressed_length).to eql(150914)
+    end
   end
 end

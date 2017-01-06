@@ -17,9 +17,14 @@ class Decompressor
     decompressed = []
     char_index = 0
     while char_index < @text.length
+      unless @text[char_index] =~ /[A-Za-z\(\)0-9]/
+        char_index += 1
+        next
+      end
       if @text[char_index] == '('
-        copy_length, copy_number = @text.slice(char_index + 1, 3).split('x')
-        char_index += 5
+        slice_match = /\(([\d]+x[\d]+)\)/.match(@text.slice(char_index, 10))
+        copy_length, copy_number = slice_match.captures.first.split('x')
+        char_index += copy_length.length + copy_number.length + 3
         decompressed << @text.slice(char_index, copy_length.to_i) * copy_number.to_i
         char_index += copy_length.to_i
       else
