@@ -2,7 +2,7 @@ class Bot
   attr_reader :name
 
   def initialize(name)
-    @name = name
+    @name = name.to_s
     @chips = {}
   end
 

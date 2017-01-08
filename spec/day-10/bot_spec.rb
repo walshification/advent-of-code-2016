@@ -5,6 +5,10 @@ RSpec.describe Bot do
     it 'assigns itself a given name' do
       expect(Bot.new('Charlie').name).to eql('Charlie')
     end
+
+    it 'converts the name to a string if it needs to' do
+      expect(Bot.new(42).name).to eql('42')
+    end
   end
 
   describe '#add_chip' do
