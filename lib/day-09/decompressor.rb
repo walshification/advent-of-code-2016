@@ -34,8 +34,6 @@ class Decompressor
     decompressed.flatten.join
   end
 
-  private
-
   def important_character?(current_character)
     current_character =~ /[A-Za-z\(\)0-9]/
   end
