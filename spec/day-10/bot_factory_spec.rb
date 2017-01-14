@@ -84,11 +84,38 @@ RSpec.describe BotFactory do
     end
   end
 
+  describe '#multiply_bins' do
+    it 'multiplies chip values in the bins' do
+      factory = BotFactory.new([
+        'value 3 goes to output 2',
+        'value 4 goes to output 1',
+      ])
+      expect(factory.multiply_bins).to eql(12)
+    end
+
+    it 'multiplies values that are passed to bins' do
+      factory = BotFactory.new([
+        'value 3 goes to bot 2',
+        'value 4 goes to bot 1',
+        'bot 1 gives low to output 1 and high to bot 2',
+        'bot 2 gives low to output 2 and high to bot 3',
+        'value 6 goes to bot 1',
+      ])
+      expect(factory.multiply_bins).to eql(12)
+    end
+  end
+
   context 'with Advent Code input' do
     it 'solves the puzzle' do
       advent_commands = YAML.load_file('spec/fixtures/bot_factory_commands.yml')
       factory = BotFactory.new(advent_commands)
       expect(factory.orchestrate).to eql('bot 141')
+    end
+
+    it 'multiplies the bins' do
+      advent_commands = YAML.load_file('spec/fixtures/bot_factory_commands.yml')
+      factory = BotFactory.new(advent_commands)
+      expect(factory.multiply_bins).to eql(1209)
     end
   end
 end

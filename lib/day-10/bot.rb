@@ -15,7 +15,7 @@ class Bot
   end
 
   def add_chip(chip_number)
-    @chips.push(chip_number).sort!
+    @chips.push(chip_number).sort! if chip_number
     if @chips.length > 1
       return "#{name},pass_chips"
     end
