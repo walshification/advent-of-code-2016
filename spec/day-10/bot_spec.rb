@@ -22,25 +22,4 @@ RSpec.describe Bot do
       expect(bot.chips).to eql([42, 53])
     end
   end
-
-  describe '#pass_chips' do
-    it 'removes a chip from its list and returns it for another bot' do
-      bot = Bot.new('bot').add_chip(53).add_chip(42)
-      expect(bot.pass_chips).to eql([[nil, 42], [nil, 53]])
-      expect(bot.chips).to eql([])
-    end
-  end
-
-  describe '#execute' do
-    context 'give command' do
-      it 'pairs the low and high chips with respective bot targets' do
-        bot = Bot.new('bot')
-                 .execute('bot 2 gives low to bot 1 and high to bot 0')
-                 .add_chip(53)
-                 .add_chip(42)
-        expect(bot.pass_chips).to eql([['1', 42], ['0', 53]])
-        expect(bot.chips).to eql([])
-      end
-    end
-  end
 end
