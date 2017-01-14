@@ -13,13 +13,16 @@ RSpec.describe Bot do
 
   describe '#add_chip' do
     it 'accepts a chip with a number to process' do
-      bot = Bot.new('bot').add_chip(53)
+      bot = Bot.new('bot')
+      bot.add_chip(53)
       expect(bot.chips).to eql([53])
     end
 
-    it 'sorts chips as it adds them' do
-      bot = Bot.new('bot').add_chip(53).add_chip(42)
-      expect(bot.chips).to eql([42, 53])
+    it 'returns a pass_chips event when bot has two chips' do
+      bot = Bot.new('bot')
+      bot.add_chip(53)
+      event = bot.add_chip(42)
+      expect(event).to eql('bot,pass_chips')
     end
   end
 end

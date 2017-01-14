@@ -23,10 +23,14 @@ class BotFactory
         event = command.execute
         @history << command
         unless event.nil?
-          event_bot, event_command = event.split(',')
-          @state_events.unshift(event_command_for(@bots[event_bot]))
-          if event_command == 'advent_bot'
-            return event_bot
+          event_details = event.split(';')
+          event_details.each do |event_detail|
+            event_bot, event_type = event_detail.split(',')
+            if event_type == 'advent_bot'
+              return event_bot
+            end
+            event_command = event_command_for(@bots[event_bot])
+            @state_events << event_command
           end
         end
       end

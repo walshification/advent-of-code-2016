@@ -1,3 +1,4 @@
+require 'yaml'
 require 'day-10/bot_factory'
 
 RSpec.describe BotFactory do
@@ -85,6 +86,9 @@ RSpec.describe BotFactory do
 
   context 'with Advent Code input' do
     it 'solves the puzzle' do
+      advent_commands = YAML.load_file('spec/fixtures/bot_factory_commands.yml')
+      factory = BotFactory.new(advent_commands)
+      expect(factory.orchestrate).to eql('bot 141')
     end
   end
 end

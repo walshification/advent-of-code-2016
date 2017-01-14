@@ -7,7 +7,7 @@ class AssignChip
   end
 
   def execute
-    if @bot.add_chip(@chip_number).chips.count > 1
+    if @bot.add_chip(@chip_number) == "#{@bot.name},pass_chips"
       "#{@bot.name},pass_chips"
     else
       nil
