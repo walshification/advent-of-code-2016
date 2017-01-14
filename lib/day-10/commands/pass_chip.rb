@@ -12,7 +12,7 @@ class PassChip
     high_chip = @origin_bot.pass_high_chip
     @low_target_bot.add_chip(low_chip)
     @high_target_bot.add_chip(high_chip)
-    if low_chip == 17 and high_chip == 61
+    if low_chip == 17 && high_chip == 61
       return "#{@origin_bot.name},advent_bot"
     end
   end

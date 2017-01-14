@@ -39,21 +39,18 @@ RSpec.describe BotFactory do
   describe '#orchestrate' do
     it 'executes commands in the order they are listed' do
       bot = build(:bot)
-      low_bot = build(:bot, name: 'bot 5')
-      high_bot = build(:bot, name: 'bot 6')
-      assign_chip = AssignChip.new(bot, 5)
-      pass_chip = PassChip.new(bot, low_bot, high_bot)
-      allow(Bot).to receive(:new).and_return(bot, low_bot, high_bot)
-      allow(AssignChip).to receive(:new).with(bot, 5) { assign_chip }
-      allow(PassChip).to receive(:new).with(bot, low_bot, high_bot) { pass_chip }
+      assign_5 = AssignChip.new(bot, 5)
+      assign_6 = AssignChip.new(bot, 6)
+      allow(Bot).to receive(:new) { bot }
+      allow(AssignChip).to receive(:new).and_return(assign_5, assign_6)
 
       factory = BotFactory.new([
         'value 5 goes to bot 4',
-        'bot 4 gives low to bot 5 and high to bot 6',
+        'value 6 goes to bot 4',
       ])
 
-      expect(assign_chip).to receive(:execute).ordered
-      expect(pass_chip).to receive(:execute).ordered
+      expect(assign_5).to receive(:execute).ordered
+      expect(assign_6).to receive(:execute).ordered
       factory.orchestrate
     end
 
@@ -61,20 +58,28 @@ RSpec.describe BotFactory do
       bot = build(:bot)
       low_bot = build(:bot, name: 'bot 5')
       high_bot = build(:bot, name: 'bot 6')
-      assign_chip = AssignChip.new(bot, 5)
-      pass_chip = PassChip.new(bot, low_bot, high_bot)
       allow(Bot).to receive(:new).and_return(bot, low_bot, high_bot)
-      allow(AssignChip).to receive(:new).with(bot, 5) { assign_chip }
-      allow(PassChip).to receive(:new).with(bot, low_bot, high_bot) { pass_chip }
-      allow(assign_chip).to receive(:execute) { 'bot 4,pass_chip' }
+      pass_chip = PassChip.new(bot, low_bot, high_bot)
+      allow(PassChip).to receive(:new) { pass_chip }
 
       factory = BotFactory.new([
         'value 5 goes to bot 4',
         'bot 4 gives low to bot 5 and high to bot 6',
+        'value 6 goes to bot 4',
       ])
 
       expect(pass_chip).to receive(:execute)
       factory.orchestrate
+    end
+
+    it 'returns the name of the advent_bot' do
+      factory = BotFactory.new([
+        'value 17 goes to bot 4',
+        'bot 4 gives low to bot 5 and high to bot 6',
+        'value 61 goes to bot 4',
+      ])
+
+      expect(factory.orchestrate).to eql('bot 4')
     end
   end
 
