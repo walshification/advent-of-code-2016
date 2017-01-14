@@ -35,12 +35,14 @@ class BotFactory
     commands.map do |command|
       command_type = /(\w+) \d+/.match(command)[1]
       if command_type == 'value'
-        AssignChip.new(create_or_find_bot(/(bot \d+)/.match(command)[1]),
-                       /\w+ (\d+)/.match(command)[1].to_i)
+        bot = create_or_find_bot(/(bot \d+)/.match(command)[1])
+        chip = /value (\d+)/.match(command)[1].to_i
+        AssignChip.new(bot, chip)
       elsif command_type == 'bot'
-        PassChip.new(create_or_find_bot(/(bot \d+)/.match(command)[1]),
-                     create_or_find_bot(/gives low to (bot \d+|output \d+)/.match(command)[1]),
-                     create_or_find_bot(/high to (bot \d+|output \d+)/.match(command)[1]))
+        origin_bot = create_or_find_bot(/(bot \d+)/.match(command)[1])
+        low_bot = create_or_find_bot(/low to (bot \d+|output \d+)/.match(command)[1])
+        high_bot = create_or_find_bot(/high to (bot \d+|output \d+)/.match(command)[1])
+        PassChip.new(origin_bot, low_bot, high_bot)
       end
     end
   end
