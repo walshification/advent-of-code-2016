@@ -22,6 +22,12 @@ RSpec.describe PassChip do
       expect(high_target_bot.chips).to eql([2])
       expect(origin_bot.chips).to eql([])
     end
+
+    it 'returns an advent_bot event when a bot compares the magic chips' do
+      advent_bot = build(:bot, name: 'advent').add_chip(17).add_chip(61)
+      pass = described_class.new(advent_bot, low_target_bot, high_target_bot)
+      expect(pass.execute).to eql('advent,advent_bot')
+    end
   end
 
   describe '#undo' do
