@@ -30,6 +30,24 @@ RSpec.describe PassChip do
       pass = described_class.new(advent_bot, low_target_bot, high_target_bot)
       expect(pass.execute).to eql('advent,advent_bot')
     end
+
+    it 'returns nil when no events are triggered' do
+      result = described_class.new(origin_bot, low_target_bot, high_target_bot).execute
+      expect(result).to eql(nil)
+    end
+
+    it 'returns one pass_chips event if one bot gets fully loaded' do
+      low_target_bot.add_chip(42)
+      result = described_class.new(origin_bot, low_target_bot, high_target_bot).execute
+      expect(result).to eql('bot 5,pass_chips')
+    end
+
+    it 'returns two pass_chips events if both bots get fully loaded' do
+      low_target_bot.add_chip(42)
+      high_target_bot.add_chip(43)
+      result = described_class.new(origin_bot, low_target_bot, high_target_bot).execute
+      expect(result).to eql('bot 5,pass_chips;bot 6,pass_chips')
+    end
   end
 
   describe '#undo' do

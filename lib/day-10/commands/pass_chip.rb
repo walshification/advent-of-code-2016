@@ -8,11 +8,12 @@ class PassChip
   end
 
   def execute
-    low_chip = @origin_bot.pass_low_chip
-    high_chip = @origin_bot.pass_high_chip
-    low_event = @low_target_bot.add_chip(low_chip)
-    high_event = @high_target_bot.add_chip(high_chip)
-    check_events(low_chip, high_chip, low_event, high_event)
+    return "#{@origin_bot.name},advent_bot" if advent_bot?
+    events = [
+      @low_target_bot.add_chip(@origin_bot.pass_low_chip),
+      @high_target_bot.add_chip(@origin_bot.pass_high_chip),
+    ].compact
+    events.any? ? events.join(';') : nil
   end
 
   def undo
@@ -22,15 +23,7 @@ class PassChip
 
   private
 
-  def check_events(low_chip, high_chip, low_event, high_event)
-    if low_chip == 17 && high_chip == 61
-      return "#{@origin_bot.name},advent_bot"
-    elsif low_event && high_event
-      return "#{low_event};#{high_event}"
-    elsif low_event
-      return low_event
-    elsif high_event
-      return high_event
-    end
+  def advent_bot?
+    @origin_bot.chips.first == 17 && @origin_bot.chips.last == 61
   end
 end
