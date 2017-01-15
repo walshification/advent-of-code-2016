@@ -25,7 +25,8 @@ class BotFactory
 
   def multiply_bins
     run do |event_detail|
-      event_bot, _ = event_detail.split(',')
+      event_bot, event_type = event_detail.split(',')
+      next if event_type == 'advent_bot'
       event_command_for(@bots[event_bot])
     end
     output_chips.inject(:*)
@@ -60,6 +61,7 @@ class BotFactory
         event_details = event.split(';')
         event_details.each do |event_detail|
           @state_events << yield(event_detail)
+          @state_events.compact!
         end
       end
     end
