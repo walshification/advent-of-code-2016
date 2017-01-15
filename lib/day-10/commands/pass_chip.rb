@@ -8,8 +8,9 @@ class PassChip
   end
 
   def execute
-    return "#{@origin_bot.name},advent_bot" if advent_bot?
-    events = [
+    events = []
+    events << "#{@origin_bot.name},advent_bot" if advent_bot?
+    events += [
       @low_target_bot.add_chip(@origin_bot.pass_low_chip),
       @high_target_bot.add_chip(@origin_bot.pass_high_chip),
     ].compact
