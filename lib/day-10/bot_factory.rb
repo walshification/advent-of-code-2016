@@ -16,43 +16,17 @@ class BotFactory
   end
 
   def orchestrate
-    @commands.each do |initial_command|
-      @state_events << initial_command
-      while @state_events.any?
-        command = @state_events.pop
-        event = command.execute
-        @history << command
-        unless event.nil?
-          event_details = event.split(';')
-          event_details.each do |event_detail|
-            event_bot, event_type = event_detail.split(',')
-            if event_type == 'advent_bot'
-              return event_bot
-            end
-            event_command = event_command_for(@bots[event_bot])
-            @state_events << event_command
-          end
-        end
-      end
+    run do |event_detail|
+      event_bot, event_type = event_detail.split(',')
+      return event_bot if event_type == 'advent_bot'
+      event_command_for(@bots[event_bot])
     end
   end
 
   def multiply_bins
-    @commands.each do |initial_command|
-      @state_events << initial_command
-      while @state_events.any?
-        command = @state_events.pop
-        event = command.execute
-        @history << command
-        unless event.nil?
-          event_details = event.split(';')
-          event_details.each do |event_detail|
-            event_bot, event_type = event_detail.split(',')
-            event_command = event_command_for(@bots[event_bot])
-            @state_events << event_command
-          end
-        end
-      end
+    run do |event_detail|
+      event_bot, _ = event_detail.split(',')
+      event_command_for(@bots[event_bot])
     end
     output_chips.inject(:*)
   end
@@ -71,6 +45,22 @@ class BotFactory
         low_bot = create_or_find_bot(/low to (bot \d+|output \d+)/.match(command)[1])
         high_bot = create_or_find_bot(/high to (bot \d+|output \d+)/.match(command)[1])
         @pass_events << PassChip.new(origin_bot, low_bot, high_bot)
+      end
+    end
+  end
+
+  def run
+    @commands.each do |initial_command|
+      @state_events << initial_command
+      while @state_events.any?
+        command = @state_events.pop
+        @history << command
+        event = command.execute
+        next if event.nil?
+        event_details = event.split(';')
+        event_details.each do |event_detail|
+          @state_events << yield(event_detail)
+        end
       end
     end
   end

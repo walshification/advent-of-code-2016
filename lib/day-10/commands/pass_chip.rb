@@ -12,23 +12,25 @@ class PassChip
     high_chip = @origin_bot.pass_high_chip
     low_event = @low_target_bot.add_chip(low_chip)
     high_event = @high_target_bot.add_chip(high_chip)
-    if low_chip == 17 && high_chip == 61
-      return "#{@origin_bot.name},advent_bot"
-    end
-    unless low_event.nil? && !high_event.nil?
-      return "#{low_event};#{high_event}"
-    end
-    unless low_event.nil?
-      return low_event
-    end
-    unless high_event.nil?
-      return high_event
-    end
-    nil
+    check_events(low_chip, high_chip, low_event, high_event)
   end
 
   def undo
     @origin_bot.add_chip(@low_target_bot.pass_low_chip)
     @origin_bot.add_chip(@high_target_bot.pass_high_chip)
+  end
+
+  private
+
+  def check_events(low_chip, high_chip, low_event, high_event)
+    if low_chip == 17 && high_chip == 61
+      return "#{@origin_bot.name},advent_bot"
+    elsif low_event && high_event
+      return "#{low_event};#{high_event}"
+    elsif low_event
+      return low_event
+    elsif high_event
+      return high_event
+    end
   end
 end
